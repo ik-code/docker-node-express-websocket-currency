@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+      
+      <script type = "text/javascript">
+         function WebSocketTest() {
+            
+            if ("WebSocket" in window) {
+               alert("WebSocket is supported by your Browser!");
+               
+               var ws = new WebSocket("ws://localhost:8999/currency");
+							
+               ws.onmessage = function (evt) { 
+                  let received_currency = JSON.parse(evt.data);
+                  console.log(received_currency);
+                  alert("Currency is received...");
+                    let card_list = document.getElementById("card_list");
+                    card_list.innerHTML = '';
+                    let new_currency_item = '';
+                    received_currency.forEach((item, index) => {
+                        new_currency_item +=  `<div class="card m-2" style="max-width: 480px;"><div class="row g-0"><div class="col-md-8"><div class="card-body"><h5 class="card-title" style="min-width: 460px;">Currency ${index}</h5><p class="card-text">currencyCodeA: ${item.currencyCodeA}</p><p class="card-text">currencyCodeB: ${item.currencyCodeB}</p><p class="card-text">date: ${item.date}</p><p class="card-text">rateBuy:${item.rateBuy}</p><p class="card-text">rateCross:${item.rateCross}</p><p class="card-text">rateSell:${item.rateSell}</p></div></div></div></div>`;
+                    });
+                    card_list.innerHTML = new_currency_item;
+               };
+				
+               ws.onclose = function() { 
+                  alert("Connection is closed..."); 
+               };
+            } else {
+               alert("WebSocket NOT supported by your Browser!");
+            }
+         }
+      </script>
+		
+   </head>
+   
+   <body>
+      <div id = "sse" class="d-flex justify-content-center">
+         <a class="btn btn-primary" href = "javascript:WebSocketTest()">Connect to WebSocket</a>
+      </div>
+      <div class="container mt-3">
+        <h2 class="text-center">Monobank currency</h2>
+
+        <div class="card_list_holder">
+            <div class="d-flex justify-content-center">
+                <div id="card_list" class="overflow-auto" style="max-height: 80vh;">
+                </div>
+        </div>
+      </div>
+      
+   </body>
+</html>
